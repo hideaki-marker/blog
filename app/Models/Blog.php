@@ -16,7 +16,7 @@ class Blog extends Model
         'image',
     ];
     //リレーション追加
-    public function user(){
-        return $this->belongsTo(User::class);
-    }
+    public function user() {
+         return $this->belongsTo(User::class);
+         }
 }

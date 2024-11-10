@@ -24,7 +24,7 @@
             <td>
                 <h2 class="fs-5 text-primary">{{ $blog->title}}</h2>                
                 {!! nl2br($blog->content) !!}
-                <div class="text-end text-secondary" style="font-size: 0.75rem;">投稿者：{{ $blog->user->name }}
+                <div class="text-end text-secondary" style="font-size: 0.75rem;">{{--投稿者：{{ $auth_user->name }}--}}
                     　投稿日：{{substr($blog->created_at,0,10)}}
                     　更新日：{{substr($blog->updated_at,0,10)}}</div>
                 <div class="text-end">
