@@ -39,20 +39,20 @@ class BlogController extends Controller
             'title' => 'required',
             'content' => 'required',
             'image' => 'required',
-        ]);
-
-        //ディレクトリ名
+            ]);
+        // ディレクトリ名
         $dir = 'images';
-        //imageディレクトリに画像を保存
+        // imageディレクトリに画像を保存
         $path = $request->file('image')->store('public/' . $dir);
 
         $blog = new Blog;
-        $blog->title = $request->input(['title']);
-        $blog->content = $request->input(['content']);
+        $blog->title = $request->input(["title"]);
+        $blog->content = $request->input(["content"]);
         $blog->user_id = \Auth::user()->id;
         $blog->image = $path;
         $blog->save();
-        return redirect()->route('blogs.index')->with('success', '登録しました');
+        return redirect()->route('blogs.index')
+        ->with('success','登録しました');
     }
 
     /**
@@ -79,7 +79,27 @@ class BlogController extends Controller
      */
     public function update(Request $request, Blog $blog)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'content' => 'required',
+            ]);
+        if($request->file('image')){
+            $dir = 'images';
+            $path = $request->file('image')->store('public/' . $dir);
+        }
+
+        $blog->title = $request->input(["title"]);
+        $blog->content = $request->input(["content"]);
+        $blog->user_id = \Auth::user()->id;
+        if($request->file('image')){
+            $blog->image = $path;
+        }
+        $blog->save();
+
+        $page = request()->input('page');
+
+        return redirect()->route('blogs.index', ['page' => $page])
+        ->with('success','更新しました');
     }
 
     /**
