@@ -13,7 +13,7 @@
   </head>
   <body>
     <div class="container">
-    <h1 style="font-size:1.75rem;">Laravelシステム</h1>
+    <h1 style="font-size:1.75rem;">Laravelブログ</h1>
         @yield('content')
         <div><a href="{{ url('./dashboard') }}">dashboard</a></div>
     </div>
