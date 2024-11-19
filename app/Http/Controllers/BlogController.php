@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class BlogController extends Controller
 {
@@ -14,7 +16,7 @@ class BlogController extends Controller
     {
         
         $blogs = Blog::latest()->paginate(3);
-        $auth_user = \Auth::user()->name ;
+        $auth_user = \Auth::user()->name;
 
         return view('index',compact('blogs','auth_user'))
         ->with('i', (request()->input('page', 1) - 1) * 3);
@@ -25,7 +27,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        //
+        return view('create');
     }
 
     /**
@@ -33,7 +35,24 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'content' => 'required',
+            'image' => 'required',
+        ]);
+
+        //ディレクトリ名
+        $dir = 'images';
+        //imageディレクトリに画像を保存
+        $path = $request->file('image')->store('public/' . $dir);
+
+        $blog = new Blog;
+        $blog->title = $request->input(['title']);
+        $blog->content = $request->input(['content']);
+        $blog->user_id = \Auth::user()->id;
+        $blog->image = $path;
+        $blog->save();
+        return redirect()->route('blogs.index')->with('success', '登録しました');
     }
 
     /**
@@ -49,7 +68,10 @@ class BlogController extends Controller
      */
     public function edit(Blog $blog)
     {
-        //
+        if($blog->user_id != \Auth::user()->id){
+            exit();
+        }
+        return view('edit',compact('blog'));
     }
 
     /**
